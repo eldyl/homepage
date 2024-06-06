@@ -158,6 +158,7 @@ nav:
       - widgets/info/openweathermap.md
       - widgets/info/resources.md
       - widgets/info/search.md
+      - widgets/info/stocks.md
       - widgets/info/unifi_controller.md
       - widgets/info/weather.md
   - more/troubleshooting.md
