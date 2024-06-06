@@ -888,5 +888,9 @@
         "auth": "With Auth",
         "outdated": "Outdated",
         "banned": "Banned"
+    },
+    "stocks": {
+      "stocks": "Stocks",
+      "loading": "Loading"
     }
 }
