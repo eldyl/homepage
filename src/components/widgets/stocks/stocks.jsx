@@ -48,7 +48,11 @@ function Widget({ options }) {
                 : "text-theme-800/70 dark:text-theme-200/50 text-xs"
             }
           >
-            {stock.currentPrice}
+            {t("common.number", {
+              value: stock.currentPrice,
+              style: "currency",
+              currency: "USD",
+            })}
           </span>
         ) : (
           <span
