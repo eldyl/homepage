@@ -37,7 +37,7 @@ function Widget({ options }) {
     const stocks = data.stocks.map((stock) => (
       <span
         key={stock.ticker}
-        className="bg-theme-200/50 dark:bg-theme-900/20 rounded h-full ml-1 text-xs px-1.5 w-16 flex flex-col items-center justify-center "
+        className="bg-theme-200/50 dark:bg-theme-900/20 rounded h-full ml-1 text-xs px-1.5 w-20 flex flex-col items-center justify-center "
       >
         <span className="text-theme-800 dark:text-theme-200 text-xs">{stock.ticker}</span>
         {!viewingPercentChange ? (
