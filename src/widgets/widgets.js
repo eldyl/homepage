@@ -93,6 +93,7 @@ import scrutiny from "./scrutiny/widget";
 import sonarr from "./sonarr/widget";
 import speedtest from "./speedtest/widget";
 import stash from "./stash/widget";
+import stocks from "./stocks/widget";
 import strelaysrv from "./strelaysrv/widget";
 import swagdashboard from "./swagdashboard/widget";
 import tailscale from "./tailscale/widget";
@@ -213,6 +214,7 @@ const widgets = {
   sonarr,
   speedtest,
   stash,
+  stocks,
   strelaysrv,
   swagdashboard,
   tailscale,
