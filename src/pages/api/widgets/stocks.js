@@ -29,6 +29,16 @@ export default async function handler(req, res) {
 
   const watchlistArr = watchlist.split(",") || [watchlist];
 
+  if (watchlistArr.length > 6) {
+    return res.status(400).json({ error: "Only 6 items are allowed in the watchlist" });
+  }
+
+  const hasDuplicates = new Set(watchlistArr).size !== watchlistArr.length;
+
+  if (hasDuplicates) {
+    return res.status(400).json({ error: "Duplicate items are not allowed in watchlist" });
+  }
+
   if (provider === "finnhub") {
     // Finnhub allows up to 30 calls/second
     // https://finnhub.io/docs/api/rate-limit
