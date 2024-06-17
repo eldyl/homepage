@@ -14,9 +14,7 @@ function Widget({ options }) {
 
   const [viewingPercentChange, setViewingPercentChange] = useState(false);
 
-  const { useColor } = options;
-
-  console.log("use color", useColor);
+  const { color } = options;
 
   const { data, error } = useSWR(
     `/api/widgets/stocks?${new URLSearchParams({ lang: i18n.language, ...options }).toString()}`,
@@ -45,8 +43,8 @@ function Widget({ options }) {
         {!viewingPercentChange ? (
           <span
             className={
-              useColor
-                ? `text-xs ${parseInt(data?.dp) < 0 ? "text-emerald-300" : "text-rose-300"}`
+              color
+                ? `text-xs ${stock.percentChange < 0 ? "text-rose-300/70" : "text-emerald-300/70"}`
                 : "text-theme-800/70 dark:text-theme-200/50 text-xs"
             }
           >
@@ -55,8 +53,8 @@ function Widget({ options }) {
         ) : (
           <span
             className={
-              useColor
-                ? `text-xs ${data?.dp < 0 ? "text-emerald-300" : "text-rose-300"}`
+              color
+                ? `text-xs ${stock.percentChange < 0 ? "text-rose-300/70" : "text-emerald-300/70"}`
                 : "text-theme-800/70 dark:text-theme-200/70 text-xs"
             }
           >
