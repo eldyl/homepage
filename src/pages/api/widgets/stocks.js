@@ -57,7 +57,8 @@ export default async function handler(req, res) {
           return { ticker, currentPrice: "error", percentChange: "error" };
         }
 
-        return { ticker, currentPrice: c.toFixed(2), percentChange: dp.toFixed(2) };
+        // Rounding percentage, but we want it back to a number for comparison
+        return { ticker, currentPrice: c.toFixed(2), percentChange: parseFloat(dp.toFixed(2)) };
       }),
     );
 
