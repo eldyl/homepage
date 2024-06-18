@@ -67,6 +67,7 @@ function Widget({ options }) {
         )}
       </span>
     ));
+
     return (
       <Container>
         <Raw>
