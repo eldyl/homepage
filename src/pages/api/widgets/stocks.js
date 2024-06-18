@@ -42,7 +42,7 @@ export default async function handler(req, res) {
   if (provider === "finnhub") {
     // Finnhub allows up to 30 calls/second
     // https://finnhub.io/docs/api/rate-limit
-    if (watchlistArr.length > 30) res.status(400).json({ error: "Max items in watchlist is 30" });
+    if (watchlistArr.length > 6) res.status(400).json({ error: "Max items in watchlist is 6" });
 
     const results = await Promise.all(
       watchlistArr.map(async (ticker) => {
