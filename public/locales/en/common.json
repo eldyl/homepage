@@ -891,6 +891,9 @@
     },
     "stocks": {
       "stocks": "Stocks",
-      "loading": "Loading"
+      "loading": "Loading",
+      "open": "Open - US Market",
+      "closed": "Closed - US Market",
+      "hasDuplicates": "Duplicate items in watchlist"
     }
 }
