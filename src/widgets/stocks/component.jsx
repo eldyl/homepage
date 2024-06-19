@@ -83,7 +83,7 @@ function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuant
   const currentValueOfPosition = parseFloat(data?.c) * parseFloat(quantity);
 
   useEffect(() => {
-    if (Number.isNaN(currentValueOfPosition) === false) {
+    if (quantity && Number.isNaN(currentValueOfPosition) === false) {
       setListOfPositions((prev) => [...prev, currentValueOfPosition]);
     }
   }, [currentValueOfPosition, setListOfPositions]);
@@ -101,34 +101,42 @@ function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuant
   }
 
   return (
-    <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded flex justify-between m-1 p-1 text-xs">
-      <span className="font-thin pl-2 flex-none">{ticker}</span>
+    <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded flex flex-1 items-center justify-between m-1 p-1 text-xs">
+      <span className="font-thin ml-2 flex-none">{ticker}</span>
       <div className="flex items-center">
-        <div className="flex text-right items-center">
-          <span className="pl-2 font-bold">
-            {t("common.number", {
-              value: data?.c,
-              style: "currency",
-              currency: "USD",
-            })}
+        <div
+          className={
+            watchlistNumberOfFieldsWithQuantity > 0
+              ? "flex flex-col items-end leading-none text-right"
+              : "flex flex-row-reverse gap-x-2 mr-2"
+          }
+        >
+          <span className={`font-bold ${data?.dp > 0 ? "text-emerald-300" : "text-rose-300"}`}>
+            {data?.dp?.toFixed(2) ? `${data?.dp?.toFixed(2)}%` : "error"}
           </span>
-          <span className={`text-right font-bold w-14 ${data?.dp > 0 ? "text-emerald-300" : "text-rose-300"}`}>
-            {data?.dp?.toFixed(2)}%
+          <span className="font-bold">
+            {data.c
+              ? t("common.number", {
+                  value: data?.c,
+                  style: "currency",
+                  currency: "USD",
+                })
+              : "error"}
           </span>
         </div>
         {watchlistNumberOfFieldsWithQuantity > 0 && (
-          <div className="flex items-center">
-            <span className="font-thin ml-4">x</span>
-            <span className="font-thin ml-1 w-12 text-center">{!quantity ? "-" : quantity} </span>
-            <span className="font-thin ml-1">=</span>
-            <span className="font-bold ml-0.5 w-28 text-right">
-              {!quantity
-                ? "-"
-                : t("common.number", {
-                    value: currentValueOfPosition,
-                    style: "currency",
-                    currency: "USD",
-                  })}
+          <div className="w-32 flex flex-col items-end leading-none">
+            <div className="mr-2">
+              <span className="font-thin">{quantity && "x"}</span>
+              <span className="font-thin pl-0.5">{quantity && quantity} </span>
+            </div>
+            <span className="font-bold ml-0.5 mr-2 text-right">
+              {quantity &&
+                t("common.number", {
+                  value: currentValueOfPosition,
+                  style: "currency",
+                  currency: "USD",
+                })}
             </span>
           </div>
         )}
@@ -194,19 +202,21 @@ export default function Component({ service }) {
           />
         ))}
 
-        {watchlistNumberOfFieldsWithQuantity === listOfPositions.length && totalValueOfPositions && (
-          <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded m-1 flex-1 flex flex-row items-center justify-between p-1 text-xs">
-            <span className="font-thin pl-2">Total Value</span>
+        {watchlistNumberOfFieldsWithQuantity > 0 &&
+          watchlistNumberOfFieldsWithQuantity === listOfPositions.length &&
+          totalValueOfPositions && (
+            <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded m-1 py-2 flex-1 flex flex-row items-center justify-between p-1 text-xs">
+              <span className="font-thin pl-2">Total Value</span>
 
-            <span className="flex flex-row text-right">
-              {t("common.number", {
-                value: totalValueOfPositions,
-                style: "currency",
-                currency: "USD",
-              })}
-            </span>
-          </div>
-        )}
+              <span className="flex flex-row font-bold text-right pr-2">
+                {t("common.number", {
+                  value: totalValueOfPositions,
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </span>
+            </div>
+          )}
       </div>
     </Container>
   );
