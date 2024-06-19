@@ -108,10 +108,16 @@ function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuant
           className={
             watchlistNumberOfFieldsWithQuantity > 0
               ? "flex flex-col items-end leading-none text-right"
-              : "flex flex-row-reverse gap-x-2 mr-2"
+              : "flex flex-row-reverse mr-2 text-right"
           }
         >
-          <span className={`font-bold ${data?.dp > 0 ? "text-emerald-300" : "text-rose-300"}`}>
+          <span
+            className={
+              watchlistNumberOfFieldsWithQuantity > 0
+                ? `font-bold ${data?.dp > 0 ? "text-emerald-300" : "text-rose-300"}`
+                : `font-bold ml-2 w-10 ${data?.dp > 0 ? "text-emerald-300" : "text-rose-300"}`
+            }
+          >
             {data?.dp?.toFixed(2) ? `${data?.dp?.toFixed(2)}%` : "error"}
           </span>
           <span className="font-bold">
