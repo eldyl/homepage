@@ -53,6 +53,7 @@ export default async function handler(req, res) {
         // https://finnhub.io/pricing
         const { c, dp } = await cachedFetch(apiUrl, cache || 1);
 
+        // API sometimes returns 200, but values returned are `null`
         if (c === null || dp === null) {
           return { ticker, currentPrice: "error", percentChange: "error" };
         }
