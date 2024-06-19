@@ -35,9 +35,9 @@ function Widget({ options }) {
 
   if (data) {
     const stocks = data.stocks.map((stock) => (
-      <span
+      <div
         key={stock.ticker}
-        className="bg-theme-200/50 dark:bg-theme-900/20 rounded h-full ml-1 text-xs px-1.5 w-20 flex flex-col items-center justify-center "
+        className="bg-theme-200/50 dark:bg-theme-900/20 rounded h-full text-xs px-1 w-[4.75rem] flex flex-col items-center justify-center"
       >
         <span className="text-theme-800 dark:text-theme-200 text-xs">{stock.ticker}</span>
         {!viewingPercentChange ? (
@@ -65,7 +65,7 @@ function Widget({ options }) {
             {stock.percentChange}%
           </span>
         )}
-      </span>
+      </div>
     ));
 
     return (
@@ -76,8 +76,8 @@ function Widget({ options }) {
             onClick={() => (viewingPercentChange ? setViewingPercentChange(false) : setViewingPercentChange(true))}
             className="flex items-center w-full h-full hover:outline-none focus:outline-none"
           >
-            <FaChartLine className="flex-none w-5 h-5 text-theme-800 dark:text-theme-200" />
-            <div className="flex flex-wrap items-center mx-2 gap-y-1">{stocks}</div>
+            <FaChartLine className="flex-none w-5 h-5 text-theme-800 dark:text-theme-200 mr-2" />
+            <div className="flex flex-wrap items-center gap-0.5">{stocks}</div>
           </button>
         </Raw>
       </Container>
