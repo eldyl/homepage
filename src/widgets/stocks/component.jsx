@@ -13,7 +13,7 @@ function parseWatchlist(watchlist) {
 
   // Parse quantity if it exists, and check for duplicates
   const parsedWatchlist = watchlist.map((ticker) => {
-    const tickerAndQuantity = ticker.split("+");
+    const tickerAndQuantity = ticker.split("*");
 
     const tickerSymbol = tickerAndQuantity[0];
     const quantity = tickerAndQuantity[1] ? tickerAndQuantity[1] : null;
@@ -61,32 +61,47 @@ function MarketStatus({ service }) {
 
   if (isOpen) {
     return (
-      <span className="inline-flex items-center rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400/90 ring-1 ring-inset ring-green-500/20">
+      <span className="inline-flex items-center rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400/90 ring-1 ring-inset ring-green-500/20 cursor-default">
         {t("stocks.open")}
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400/60 ring-1 ring-inset ring-red-400/10">
+    <span className="inline-flex items-center rounded-md bg-red-400/10 px-2 py-1 text-xs font-medium text-red-400/60 ring-1 ring-inset ring-red-400/10 cursor-defualt">
       {t("stocks.closed")}
     </span>
   );
 }
 
-function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuantity, setListOfPositions }) {
+function StockItem({
+  service,
+  ticker,
+  quantity,
+  // setCurrentValueAtPosition,
+  // currentValueAtPosition,
+  // listOfPositions,
+  watchlistNumberOfFieldsWithQuantity,
+  // setListOfPositions,
+  // setTotalValueOfPositions,
+}) {
   const { t } = useTranslation();
   const { widget } = service;
 
   const { data, error } = useWidgetAPI(widget, "stocks/quote", { symbol: ticker });
 
-  const currentValueOfPosition = parseFloat(data?.c) * parseFloat(quantity);
+  const valueOfPosition = parseFloat(data?.c) * parseFloat(quantity);
 
-  useEffect(() => {
-    if (quantity && Number.isNaN(currentValueOfPosition) === false) {
-      setListOfPositions((prev) => [...prev, currentValueOfPosition]);
-    }
-  }, [currentValueOfPosition, setListOfPositions]);
+  // useEffect(() => {
+  //   if (valueOfPosition > 0 && Number.isNaN(valueOfPosition) === false) {
+  //     console.log("we setting!", valueOfPosition);
+  //     setCurrentValueAtPosition(valueOfPosition);
+  //   }
+  //
+  //   if (listOfPositions.length === watchlistNumberOfFieldsWithQuantity) {
+  //     setTotalValueOfPositions(listOfPositions.reduce((acc, curr) => acc + curr, 0));
+  //   }
+  // }, [valueOfPosition, setListOfPositions, listOfPositions, watchlistNumberOfFieldsWithQuantity]);
 
   if (error || data?.error) {
     return <Container service={service} error={error} />;
@@ -139,7 +154,7 @@ function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuant
             <span className="font-bold ml-0.5 mr-2 text-right">
               {quantity &&
                 t("common.number", {
-                  value: currentValueOfPosition,
+                  value: valueOfPosition,
                   style: "currency",
                   currency: "USD",
                 })}
@@ -151,26 +166,43 @@ function StockItem({ service, ticker, quantity, watchlistNumberOfFieldsWithQuant
   );
 }
 
+function TotalRow({ totalValueOfPositions }) {
+  const { t } = useTranslation();
+
+  // const totalValueOfPositions = useMemo(() => {
+  //   return listOfPositions.reduce((acc, curr) => acc + curr, 0);
+  // }, [listOfPositions]);
+  // console.log("Total value of positions ->", totalValueOfPositions);
+
+  return (
+    <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded m-1 py-2 flex-1 flex flex-row items-center justify-between p-1 text-xs">
+      <span className="font-thin pl-2">Total Value</span>
+
+      <span className="flex flex-row font-bold text-right pr-2">
+        {t("common.number", {
+          value: totalValueOfPositions,
+          style: "currency",
+          currency: "USD",
+        })}
+      </span>
+    </div>
+  );
+}
+
 export default function Component({ service }) {
   const { t } = useTranslation();
   const { widget } = service;
   const { watchlist, showUSMarketStatus } = widget;
 
+  const [currentValueAtPosition, setCurrentValueAtPosition] = useState(null);
+  const [totalValueOfPositions, setTotalValueOfPositions] = useState(null);
   const [listOfPositions, setListOfPositions] = useState([]);
 
-  const [totalValueOfPositions, setTotalValueOfPositions] = useState(null);
-
   useEffect(() => {
-    setTotalValueOfPositions(() => {
-      let summed = 0;
-      listOfPositions.forEach((val) => {
-        summed += val;
-      });
-      return summed;
-    });
-
-    return () => setTotalValueOfPositions(null);
-  }, [listOfPositions]);
+    if (currentValueAtPosition) {
+      setListOfPositions((prev) => [...prev, currentValueAtPosition]);
+    }
+  }, [currentValueAtPosition]);
 
   if (!watchlist || !watchlist.length) {
     return (
@@ -204,25 +236,15 @@ export default function Component({ service }) {
             ticker={ticker}
             quantity={quantity}
             watchlistNumberOfFieldsWithQuantity={watchlistNumberOfFieldsWithQuantity}
+            setCurrentValueAtPosition={setCurrentValueAtPosition}
+            currentValueAtPosition={currentValueAtPosition}
+            listOfPositions={listOfPositions}
             setListOfPositions={setListOfPositions}
+            setTotalValueOfPositions={setTotalValueOfPositions}
           />
         ))}
 
-        {watchlistNumberOfFieldsWithQuantity > 0 &&
-          watchlistNumberOfFieldsWithQuantity === listOfPositions.length &&
-          totalValueOfPositions && (
-            <div className="bg-theme-200/50 dark:bg-theme-900/20 rounded m-1 py-2 flex-1 flex flex-row items-center justify-between p-1 text-xs">
-              <span className="font-thin pl-2">Total Value</span>
-
-              <span className="flex flex-row font-bold text-right pr-2">
-                {t("common.number", {
-                  value: totalValueOfPositions,
-                  style: "currency",
-                  currency: "USD",
-                })}
-              </span>
-            </div>
-          )}
+        <TotalRow listOfPositions={listOfPositions} totalValueOfPositions={totalValueOfPositions} />
       </div>
     </Container>
   );
