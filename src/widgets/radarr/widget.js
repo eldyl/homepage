@@ -12,7 +12,10 @@ const widget = {
         wanted: jsonArrayFilter(data, (item) => item.monitored && !item.hasFile && item.isAvailable).length,
         have: jsonArrayFilter(data, (item) => item.hasFile).length,
         missing: jsonArrayFilter(data, (item) => item.monitored && !item.hasFile).length,
-        all: asJson(data),
+        all: asJson(data).map((entry) => ({
+          id: entry.id,
+          title: entry.title,
+        })),
       }),
     },
     "queue/status": {
